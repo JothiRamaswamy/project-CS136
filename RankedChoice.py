@@ -1,28 +1,32 @@
 class RankedChoice:
 
-    def __init__(self, candidates, vote_count, preferences, pref_type):
+    def __init__(self, candidates, vote_count, preferences):
         self.candidates = candidates
         self.vote_count = vote_count
         self.preferences = preferences
-        self.pref_type = pref_type
 
     def determine_winner(self):
         vote_tally = [0] * len(self.candidates)
         candidates_left = list(self.candidates.keys())
-        preferences = self.preferences.copy()
+        prefs = []
+        for i in self.preferences:
+            temp = []
+            for j in i:
+                temp.append(j)
+            prefs.append(temp)
         while True:
-            for p in range(len(preferences)):
-                if len(preferences[p]) == 1:
+            for p in range(len(prefs)):
+                if len(prefs[p]) == 0:
                     continue
                 try:
-                    while preferences[p][1] not in candidates_left:
-                        preferences[p].pop(1)
-                        if len(preferences[p]) == 1:
+                    while prefs[p][0] not in candidates_left:
+                        prefs[p].pop(0)
+                        if len(prefs[p]) == 0:
                             continue
                 except:
                     continue
-                idx = candidates_left.index(preferences[p][1])
-                vote_tally[idx]+=preferences[p][0]
+                idx = candidates_left.index(prefs[p][0])
+                vote_tally[idx]+=1
                 
             if max(vote_tally) == min(vote_tally):
                 return "Tie"
